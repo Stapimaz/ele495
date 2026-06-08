@@ -5,26 +5,28 @@ Bu proje, ESP32 (DevKit V1) temel alınarak geliştirilen ve PlatformIO üzerind
 ## 📌 Donanım ve Pin Bağlantıları
 
 ### 1. Güç Bağlantıları (ÖNEMLİ!)
-*   **TB6612FNG (VM):** Sadece motorlara giden ana güç (Örn: 7.4V Li-Po Pil). GÜVENLİK İÇİN ARAYA ŞALTER KOYUN!
-*   **ESP32 3.3V -> TB6612FNG (VCC):** Sürücünün mantık devresini besler.
-*   **ESP32 3.3V -> TB6612FNG (STBY):** Motor sürücüyü aktif hale getirir (Bağlanmazsa motorlar dönmez).
-*   **GND:** Pilin GND'si, ESP32'nin GND'si ve TB6612FNG'nin GND'si **KESİNLİKLE BİRBİRİNE BAĞLI (ORTAK) OLMALIDIR**.
+*   **L298N (12V veya Yüksek Voltaj Girişi):** Sadece motorlara giden ana güç (Örn: 7.4V Li-Po Pil). GÜVENLİK İÇİN ARAYA ŞALTER KOYUN!
+*   **ESP32 5V (veya VIN) -> L298N (5V):** L298N'nin mantık devresini beslemek için kullanılabilir (Eğer L298N'nin kendi 5V regülatör jumper'ı kapalıysa). Lütfen L298N'nin özelliklerine göre 5V pinini kontrol edin.
+*   **GND:** Pilin GND'si, ESP32'nin GND'si ve L298N'nin GND'si **KESİNLİKLE BİRBİRİNE BAĞLI (ORTAK) OLMALIDIR**.
 
-### 2. Motor Sürücü (TB6612FNG)
+### 2. Motor Sürücü (L298N)
 | Pin Adı | ESP32 Pini | Açıklama |
 | :--- | :--- | :--- |
-| **PWMA** | D13 | Sol Motor Hız Kontrolü (PWM) |
-| **AIN1** | D14 | Sol Motor Yön 1 |
-| **AIN2** | D27 | Sol Motor Yön 2 |
-| **PWMB** | D25 | Sağ Motor Hız Kontrolü (PWM) |
-| **BIN1** | D26 | Sağ Motor Yön 1 |
-| **BIN2** | D33 | Sağ Motor Yön 2 |
-*Sol Motor Çıkışları: AO1 ve AO2. Sağ Motor Çıkışları: BO1 ve BO2.*
+| **ENA** | D13 | Sol Motor Hız Kontrolü (PWM) |
+| **IN1** | D14 | Sol Motor Yön 1 |
+| **IN2** | D27 | Sol Motor Yön 2 |
+| **ENB** | D25 | Sağ Motor Hız Kontrolü (PWM) |
+| **IN3** | D26 | Sağ Motor Yön 1 |
+| **IN4** | D33 | Sağ Motor Yön 2 |
+*Sol Motor Çıkışları: OUT1 ve OUT2. Sağ Motor Çıkışları: OUT3 ve OUT4.*
 
 ### 3. I2C Sensörler (MPU6050, VL53L1X, TCS34725)
-*   **SDA:** D21
-*   **SCL:** D22
-*   **XSHUT (VL53L1X):** D4 (I2C Adres çakışmasını engellemek için)
+*   **MPU6050 (İvmeölçer & Jiroskop):**
+    *   **VCC:** ESP32 3.3V
+    *   **GND:** Ortak GND
+    *   **SDA:** D21
+    *   **SCL:** D22
+*   **Diğer Sensörler:** VL53L1X XSHUT (D4) pini ile çakışmaları engellenir.
 
 ### 4. Ek Eyleyiciler
 *   **Solenoid (Şut):** D32 (PWM veya Dijital Tetikleme)

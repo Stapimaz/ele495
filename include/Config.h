@@ -16,14 +16,14 @@
 #define TCS34725_ADDR 0x29 
 #define MPU6050_ADDR 0x68
 
-// TB6612FNG Motor Sürücü
-#define MOTOR_LEFT_PWMA 13
-#define MOTOR_LEFT_AIN1 14
-#define MOTOR_LEFT_AIN2 27
+// L298N Motor Sürücü
+#define MOTOR_LEFT_ENA 13
+#define MOTOR_LEFT_IN1 14
+#define MOTOR_LEFT_IN2 27
 
-#define MOTOR_RIGHT_PWMB 25
-#define MOTOR_RIGHT_BIN1 26
-#define MOTOR_RIGHT_BIN2 33
+#define MOTOR_RIGHT_ENB 25
+#define MOTOR_RIGHT_IN3 26
+#define MOTOR_RIGHT_IN4 33
 
 // JF-0530B Solenoid
 #define SOLENOID_PWM_PIN 32

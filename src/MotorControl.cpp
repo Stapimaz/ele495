@@ -8,18 +8,18 @@ const int rightPwmChannel = 1;
 
 void initMotors() {
     // Yön pinlerini OUTPUT olarak ayarla
-    pinMode(MOTOR_LEFT_AIN1, OUTPUT);
-    pinMode(MOTOR_LEFT_AIN2, OUTPUT);
+    pinMode(MOTOR_LEFT_IN1, OUTPUT);
+    pinMode(MOTOR_LEFT_IN2, OUTPUT);
     
-    pinMode(MOTOR_RIGHT_BIN1, OUTPUT);
-    pinMode(MOTOR_RIGHT_BIN2, OUTPUT);
+    pinMode(MOTOR_RIGHT_IN3, OUTPUT);
+    pinMode(MOTOR_RIGHT_IN4, OUTPUT);
 
     // PWM Kanallarını ayarla ve pinlere bağla
     ledcSetup(leftPwmChannel, pwmFreq, pwmResolution);
-    ledcAttachPin(MOTOR_LEFT_PWMA, leftPwmChannel);
+    ledcAttachPin(MOTOR_LEFT_ENA, leftPwmChannel);
 
     ledcSetup(rightPwmChannel, pwmFreq, pwmResolution);
-    ledcAttachPin(MOTOR_RIGHT_PWMB, rightPwmChannel);
+    ledcAttachPin(MOTOR_RIGHT_ENB, rightPwmChannel);
     
     // Motorları başlangıçta durdur
     stopMotors();
@@ -27,32 +27,32 @@ void initMotors() {
 
 void driveMotorLeft(int speed) {
     if (speed > 0) {
-        digitalWrite(MOTOR_LEFT_AIN1, HIGH);
-        digitalWrite(MOTOR_LEFT_AIN2, LOW);
+        digitalWrite(MOTOR_LEFT_IN1, HIGH);
+        digitalWrite(MOTOR_LEFT_IN2, LOW);
         ledcWrite(leftPwmChannel, speed);
     } else if (speed < 0) {
-        digitalWrite(MOTOR_LEFT_AIN1, LOW);
-        digitalWrite(MOTOR_LEFT_AIN2, HIGH);
+        digitalWrite(MOTOR_LEFT_IN1, LOW);
+        digitalWrite(MOTOR_LEFT_IN2, HIGH);
         ledcWrite(leftPwmChannel, -speed);
     } else {
-        digitalWrite(MOTOR_LEFT_AIN1, LOW);
-        digitalWrite(MOTOR_LEFT_AIN2, LOW);
+        digitalWrite(MOTOR_LEFT_IN1, LOW);
+        digitalWrite(MOTOR_LEFT_IN2, LOW);
         ledcWrite(leftPwmChannel, 0);
     }
 }
 
 void driveMotorRight(int speed) {
     if (speed > 0) {
-        digitalWrite(MOTOR_RIGHT_BIN1, HIGH);
-        digitalWrite(MOTOR_RIGHT_BIN2, LOW);
+        digitalWrite(MOTOR_RIGHT_IN3, HIGH);
+        digitalWrite(MOTOR_RIGHT_IN4, LOW);
         ledcWrite(rightPwmChannel, speed);
     } else if (speed < 0) {
-        digitalWrite(MOTOR_RIGHT_BIN1, LOW);
-        digitalWrite(MOTOR_RIGHT_BIN2, HIGH);
+        digitalWrite(MOTOR_RIGHT_IN3, LOW);
+        digitalWrite(MOTOR_RIGHT_IN4, HIGH);
         ledcWrite(rightPwmChannel, -speed);
     } else {
-        digitalWrite(MOTOR_RIGHT_BIN1, LOW);
-        digitalWrite(MOTOR_RIGHT_BIN2, LOW);
+        digitalWrite(MOTOR_RIGHT_IN3, LOW);
+        digitalWrite(MOTOR_RIGHT_IN4, LOW);
         ledcWrite(rightPwmChannel, 0);
     }
 }
