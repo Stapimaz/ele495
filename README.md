@@ -1,35 +1,37 @@
 # Otonom Basketbol Robotu (ESP32)
 
-Bu proje, ESP32 (DevKit V1) temel alınarak geliştirilen ve PlatformIO üzerinde çalışan otonom bir basketbol robotu yazılım mimarisidir. FreeRTOS kullanılarak çoklu çekirdek (Core 0 ve Core 1) üzerinde sensör, motor kontrolü ve haberleşme görevleri dağıtılmıştır.
+Bu proje, ESP32-WROOM-32D Wifi Bluetooth Development Module temel alınarak geliştirilen ve PlatformIO üzerinde çalışan otonom bir basketbol robotu yazılım mimarisidir. FreeRTOS kullanılarak çoklu çekirdek (Core 0 ve Core 1) üzerinde sensör, motor kontrolü ve haberleşme görevleri dağıtılmıştır.
 
 ## 📌 Donanım ve Pin Bağlantıları
+
+*(Önemli Not: ESP32-WROOM-32D kartında pin isimlerinde "D" harfi kullanılmaz, kart üzerindeki numara neyse doğrudan o numaralı (GPIO) pine bağlamanız yeterlidir.)*
 
 ### 1. Güç Bağlantıları (ÖNEMLİ!)
 *   **L298N (12V veya Yüksek Voltaj Girişi):** Sadece motorlara giden ana güç (Örn: 7.4V Li-Po Pil). GÜVENLİK İÇİN ARAYA ŞALTER KOYUN!
 *   **ESP32 5V (veya VIN) -> L298N (5V):** L298N'nin mantık devresini beslemek için kullanılabilir (Eğer L298N'nin kendi 5V regülatör jumper'ı kapalıysa). Lütfen L298N'nin özelliklerine göre 5V pinini kontrol edin.
-*   **GND:** Pilin GND'si, ESP32'nin GND'si ve L298N'nin GND'si **KESİNLİKLE BİRBİRİNE BAĞLI (ORTAK) OLMALIDIR**.
+*   **GND:** Pilin GND'si, ESP32'nin GND'si (GND yazan herhangi bir pin) ve L298N'nin GND'si **KESİNLİKLE BİRBİRİNE BAĞLI (ORTAK) OLMALIDIR**.
 
 ### 2. Motor Sürücü (L298N)
 | Pin Adı | ESP32 Pini | Açıklama |
 | :--- | :--- | :--- |
-| **ENA** | D13 | Sol Motor Hız Kontrolü (PWM) |
-| **IN1** | D14 | Sol Motor Yön 1 |
-| **IN2** | D27 | Sol Motor Yön 2 |
-| **ENB** | D25 | Sağ Motor Hız Kontrolü (PWM) |
-| **IN3** | D26 | Sağ Motor Yön 1 |
-| **IN4** | D33 | Sağ Motor Yön 2 |
+| **ENA** | 13 | Sol Motor Hız Kontrolü (PWM) |
+| **IN1** | 14 | Sol Motor Yön 1 |
+| **IN2** | 27 | Sol Motor Yön 2 |
+| **ENB** | 25 | Sağ Motor Hız Kontrolü (PWM) |
+| **IN3** | 26 | Sağ Motor Yön 1 |
+| **IN4** | 33 | Sağ Motor Yön 2 |
 *Sol Motor Çıkışları: OUT1 ve OUT2. Sağ Motor Çıkışları: OUT3 ve OUT4.*
 
 ### 3. I2C Sensörler (MPU6050, VL53L1X, TCS34725)
 *   **MPU6050 (İvmeölçer & Jiroskop):**
-    *   **VCC:** ESP32 3.3V
+    *   **VCC:** ESP32 3.3V pinine
     *   **GND:** Ortak GND
-    *   **SDA:** D21
-    *   **SCL:** D22
-*   **Diğer Sensörler:** VL53L1X XSHUT (D4) pini ile çakışmaları engellenir.
+    *   **SDA:** 21
+    *   **SCL:** 22
+*   **Diğer Sensörler:** VL53L1X XSHUT (4) pini ile çakışmaları engellenir.
 
 ### 4. Ek Eyleyiciler
-*   **Solenoid (Şut):** D32 (PWM veya Dijital Tetikleme)
+*   **Solenoid (Şut):** 32 (PWM veya Dijital Tetikleme)
 
 ---
 
