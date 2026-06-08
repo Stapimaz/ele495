@@ -1,0 +1,121 @@
+#include "MotorControl.h"
+
+// ESP32 PWM Ayarları
+const int pwmFreq = 5000;
+const int pwmResolution = 8;     // 0-255 arası
+const int leftPwmChannel = 0;
+const int rightPwmChannel = 1;
+
+void initMotors() {
+    // Yön pinlerini OUTPUT olarak ayarla
+    pinMode(MOTOR_LEFT_AIN1, OUTPUT);
+    pinMode(MOTOR_LEFT_AIN2, OUTPUT);
+    
+    pinMode(MOTOR_RIGHT_BIN1, OUTPUT);
+    pinMode(MOTOR_RIGHT_BIN2, OUTPUT);
+
+    // PWM Kanallarını ayarla ve pinlere bağla
+    ledcSetup(leftPwmChannel, pwmFreq, pwmResolution);
+    ledcAttachPin(MOTOR_LEFT_PWMA, leftPwmChannel);
+
+    ledcSetup(rightPwmChannel, pwmFreq, pwmResolution);
+    ledcAttachPin(MOTOR_RIGHT_PWMB, rightPwmChannel);
+    
+    // Motorları başlangıçta durdur
+    stopMotors();
+}
+
+void driveMotorLeft(int speed) {
+    if (speed > 0) {
+        digitalWrite(MOTOR_LEFT_AIN1, HIGH);
+        digitalWrite(MOTOR_LEFT_AIN2, LOW);
+        ledcWrite(leftPwmChannel, speed);
+    } else if (speed < 0) {
+        digitalWrite(MOTOR_LEFT_AIN1, LOW);
+        digitalWrite(MOTOR_LEFT_AIN2, HIGH);
+        ledcWrite(leftPwmChannel, -speed);
+    } else {
+        digitalWrite(MOTOR_LEFT_AIN1, LOW);
+        digitalWrite(MOTOR_LEFT_AIN2, LOW);
+        ledcWrite(leftPwmChannel, 0);
+    }
+}
+
+void driveMotorRight(int speed) {
+    if (speed > 0) {
+        digitalWrite(MOTOR_RIGHT_BIN1, HIGH);
+        digitalWrite(MOTOR_RIGHT_BIN2, LOW);
+        ledcWrite(rightPwmChannel, speed);
+    } else if (speed < 0) {
+        digitalWrite(MOTOR_RIGHT_BIN1, LOW);
+        digitalWrite(MOTOR_RIGHT_BIN2, HIGH);
+        ledcWrite(rightPwmChannel, -speed);
+    } else {
+        digitalWrite(MOTOR_RIGHT_BIN1, LOW);
+        digitalWrite(MOTOR_RIGHT_BIN2, LOW);
+        ledcWrite(rightPwmChannel, 0);
+    }
+}
+
+void moveForward(int speed) { 
+    driveMotorLeft(speed); 
+    driveMotorRight(speed); 
+}
+
+void moveBackward(int speed) { 
+    driveMotorLeft(-speed); 
+    driveMotorRight(-speed); 
+}
+
+void stopMotors() { 
+    driveMotorLeft(0); 
+    driveMotorRight(0); 
+}
+
+void turnLeft(int speed) { 
+    driveMotorLeft(-speed); 
+    driveMotorRight(speed); 
+}
+
+void turnRight(int speed) { 
+    driveMotorLeft(speed); 
+    driveMotorRight(-speed); 
+}
+
+bool turnToAngle(float targetAngle, float currentAngle) {
+    float difference = targetAngle - currentAngle;
+    int turnSpeed = 150; // Basit motor motor dönüs hizi
+    
+    // Eger fark +- 2 derece icerisindeyse hedefe vardık
+    if (abs(difference) <= 2.0) {
+        stopMotors();
+        return true; 
+    }
+    
+    // Fark pozitifse sola, negatifse sağa don
+    if (difference > 0) {
+        turnLeft(turnSpeed);
+    } else {
+        turnRight(turnSpeed);
+    }
+    
+    return false;
+}
+
+void testMotors() {
+    // 2 saniye tam gaz ileri
+    moveForward(255);
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    
+    // 1 saniye dur
+    stopMotors();
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    
+    // 2 saniye tam gaz geri
+    moveBackward(255);
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    
+    // 1 saniye dur
+    stopMotors();
+    vTaskDelay(pdMS_TO_TICKS(1000));
+}
