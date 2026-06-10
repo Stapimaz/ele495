@@ -5,5 +5,7 @@
 
 void updateStateMachine();
 extern RobotState currentState;
+extern TargetColor currentTargetColor;
+extern int scoreCount; // Aynı yerden alınan skor sayısı
 
 #endif // STATE_MACHINE_H

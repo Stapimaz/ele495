@@ -36,11 +36,26 @@ void checkForIncomingCommands() {
         
         Serial.printf("UDP'den gelen komut: %s\n", command.c_str());
         
-        if (command == UDP_START_COMMAND) {
-            if (currentState == STATE_IDLE) {
-                Serial.println("START komutu alindi! Otonomi moduna (GLOBAL_SCAN) geciliyor.");
+        // Sadece IDLE durumunda çalışmayı başlatabilir
+        if (currentState == STATE_IDLE) {
+            if (command == CMD_START_INNER) {
+                Serial.println("DONGU BASLIYOR: Turkuaz bolge hedefleniyor.");
+                currentTargetColor = COLOR_TURQUOISE;
+                scoreCount = 0; // Skor sıfırla
+                currentState = STATE_GLOBAL_SCAN;
+            } 
+            else if (command == CMD_START_OUTER) {
+                Serial.println("DONGU BASLIYOR: Sari bolge hedefleniyor.");
+                currentTargetColor = COLOR_YELLOW;
+                scoreCount = 0; // Skor sıfırla
                 currentState = STATE_GLOBAL_SCAN;
             }
+        }
+        
+        // Atış beklenirken veya döngü içindeyken Arayüzden BASKET bilgisi gelebilir
+        if (command == CMD_SCORE_YES) {
+            Serial.println("ARAYUZDEN BASKET (SKOR) ONAYI ALINDI!");
+            scoreCount++;
         }
     }
 }
@@ -51,9 +66,8 @@ void sendTelemetryData() {
         lastTelemetryTime = millis();
         
         // .NET uygulamasının parse edebileceği basit bir JSON formatı hazırlayalım
-        // İleride mesafe, renk vb veriler eklenebilir.
         char jsonMsg[128];
-        snprintf(jsonMsg, sizeof(jsonMsg), "{\"state\":%d, \"status\":\"alive\"}", (int)currentState);
+        snprintf(jsonMsg, sizeof(jsonMsg), "{\"state\":%d, \"status\":\"alive\", \"score\":%d}", (int)currentState, scoreCount);
         
         // Broadcast adresi ESP32 SoftAP için standart 192.168.4.255'tir
         IPAddress broadcastIp(192, 168, 4, 255); 

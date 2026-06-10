@@ -20,43 +20,18 @@ void networkTask(void *pvParameters) {
     }
 }
 
-int imuTestState = 0; // MPU6050 Testi için senaryo durumu
-
 // Core 1: Sensörler, Karar mekanizması ve Motor Kontrolü
 void autonomyTask(void *pvParameters) {
+    initSensors(); // Tüm I2C sensörlerini (ToF, Renk, MPU) başlat
     initMotors();
-    initMPU(); // MPU6050'yi baslat ve I2C üzerinden kalibre et
+    initShooter();
 
     for (;;) {
-        // Her dongude MPU acisini tazele
+        // Her dongude MPU acisini tazele (Otonomi için hayati önem taşır)
         updateMPU();
-        float currentAngle = getAngleZ();
 
-        // 4 Adimli basit kapali cevrim otonom test
-        switch (imuTestState) {
-            case 0:
-                // Sola dogru 15 derece dönene kadar bekle
-                if (turnToAngle(15.0, currentAngle)) {
-                    imuTestState = 1;
-                }
-                break;
-            case 1:
-                stopMotors();
-                vTaskDelay(pdMS_TO_TICKS(2000)); // 2 saniye heykeli oyna
-                imuTestState = 2;
-                break;
-            case 2:
-                // 0 dereceye (baslangic) geri dön
-                if (turnToAngle(0.0, currentAngle)) {
-                    imuTestState = 3;
-                }
-                break;
-            case 3:
-                stopMotors();
-                vTaskDelay(pdMS_TO_TICKS(2000)); // 2 saniye bekle
-                imuTestState = 0; // Tekrar bastır
-                break;
-        }
+        // Ana Durum Makinesini (State Machine) İşlet
+        updateStateMachine();
 
         vTaskDelay(pdMS_TO_TICKS(10)); // FreeRTOS çökmemesi için bekleme (Zorunlu)
     }

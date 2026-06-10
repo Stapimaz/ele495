@@ -28,23 +28,33 @@
 // JF-0530B Solenoid
 #define SOLENOID_PWM_PIN 32
 
+// Tam Otonomi (Kör Döngü) Komutları
+#define CMD_START_INNER "CMD_START_INNER"
+#define CMD_START_OUTER "CMD_START_OUTER"
+#define CMD_SCORE_YES "CMD_SCORE_YES" // Sadece basket olunca arayüzden gönderilir
+
 // State Machine Enum Tanımlaması
 enum RobotState {
     STATE_IDLE,
     STATE_GLOBAL_SCAN,
-    STATE_ASSAULT_INNER,
-    STATE_SHOOT_INNER,
-    STATE_TACTICAL_RETREAT,
-    STATE_SHOOT_OUTER,
-    STATE_RELOAD_AND_REPOSITION
+    STATE_DRIVE_TO_ZONE,
+    STATE_PREPARE_SHOOT, // 5 sn bekleme durumu
+    STATE_SHOOT,
+    STATE_REPOSITION_10CM
+};
+
+// Pota Rengi (İç ve Dış bölge renk hedefleri)
+enum TargetColor {
+    COLOR_TURQUOISE,
+    COLOR_YELLOW,
+    COLOR_NONE
 };
 
 // Otonomi ve Algoritma Parametreleri
 // Kenar Tarama Eşiği (cm cinsinden ToF okuması) - Pota algılama mesafesi
-#define EDGE_SCAN_THRESHOLD_MM 150 // 15 cm (VL53L1X mm okur)
+#define EDGE_SCAN_THRESHOLD_MM 1500 // 150 cm (VL53L1X mm okur, düzeltildi)
 
-// UDP Başlatma Komutu
-#define UDP_START_COMMAND "START"
+
 
 // Atış Şiddeti (PWM) Hesaplama Parametreleri
 // Ölçülen minimum ve maksimum mesafeler (mm)
