@@ -84,13 +84,20 @@ void turnRight(int speed) {
 
 bool turnToAngle(float targetAngle, float currentAngle) {
     float difference = targetAngle - currentAngle;
-    int turnSpeed = 150; // Basit motor motor dönüs hizi
     
     // Eger fark +- 2 derece icerisindeyse hedefe vardık
     if (abs(difference) <= 2.0) {
         stopMotors();
         return true; 
     }
+    
+    // Oransal (P) Kontrol
+    float kP = 2.0; // P kazancı (ileride optimize edilebilir)
+    int turnSpeed = abs(difference) * kP;
+    
+    // Min ve Max hız limitleri (ölü bandı aşmak için min hız)
+    if (turnSpeed < 80) turnSpeed = 80;   
+    if (turnSpeed > 255) turnSpeed = 255;
     
     // Fark pozitifse sola, negatifse sağa don
     if (difference > 0) {

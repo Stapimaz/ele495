@@ -39,4 +39,25 @@ enum RobotState {
     STATE_RELOAD_AND_REPOSITION
 };
 
+// Otonomi ve Algoritma Parametreleri
+// Kenar Tarama Eşiği (cm cinsinden ToF okuması) - Pota algılama mesafesi
+#define EDGE_SCAN_THRESHOLD_MM 150 // 15 cm (VL53L1X mm okur)
+
+// UDP Başlatma Komutu
+#define UDP_START_COMMAND "START"
+
+// Atış Şiddeti (PWM) Hesaplama Parametreleri
+// Ölçülen minimum ve maksimum mesafeler (mm)
+#define DISTANCE_MIN_MM 300   // Örn: 30 cm
+#define DISTANCE_MAX_MM 1500  // Örn: 150 cm
+
+// Bu mesafelere karşılık gelen PWM değerleri (0-255)
+#define PWM_MIN_STRENGTH 100
+#define PWM_MAX_STRENGTH 255
+
+// Ağ (WiFi) ve UDP Parametreleri
+#define AP_SSID "ELE495_ROBOT"
+#define AP_PASS "12345678" // Minimum 8 karakter olmalı
+#define UDP_PORT 4242
+
 #endif // CONFIG_H

@@ -5,5 +5,6 @@
 
 void initShooter();
 void triggerSolenoid(int pwmIntensity);
+int calculateShootingPower(int distanceMm);
 
 #endif // SHOOTER_H

@@ -1,21 +1,22 @@
 #include <Arduino.h>
 #include "Config.h"
 #include "MotorControl.h"
-// Şimdilik diğer modülleri deaktif ediyoruz
-#include "SensorManager.h" // MPU6050 testi için aktif
-// #include "Shooter.h"
-// #include "Comms.h"
-// #include "StateMachine.h"
+// Tüm modülleri aktif ediyoruz
+#include "SensorManager.h"
+#include "Shooter.h"
+#include "Comms.h"
+#include "StateMachine.h"
 
 TaskHandle_t NetworkTaskHandle;
 TaskHandle_t AutonomyTaskHandle;
 
 // Core 0: Sadece UDP dinleme ve ağ işlemleri
 void networkTask(void *pvParameters) {
-    // initComms();
+    initComms(); // WiFi AP ve UDP Sunucusunu Başlat
     for (;;) {
-        // Haberleşmeyi şimdilik boş bırakıyoruz
-        vTaskDelay(pdMS_TO_TICKS(10)); 
+        checkForIncomingCommands(); // "START" komutu bekle
+        sendTelemetryData();        // JSON verisi gönder
+        vTaskDelay(pdMS_TO_TICKS(10)); // FreeRTOS watchdog için bekleme
     }
 }
 

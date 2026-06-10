@@ -3,6 +3,11 @@
 
 #include "Config.h"
 #include <Wire.h>
+#include <VL53L1X.h>
+#include <Adafruit_TCS34725.h>
+
+extern VL53L1X tofSensor;
+extern Adafruit_TCS34725 colorSensor;
 
 void initSensors();
 void resolveI2CConflict();
