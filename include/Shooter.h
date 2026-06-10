@@ -1,3 +1,7 @@
+/**
+ * @file Shooter.h
+ * @brief Solenoid atış mekanizmasının tetikleme ve güç hesaplama fonksiyon tanımlarını içerir.
+ */
 #ifndef SHOOTER_H
 #define SHOOTER_H
 

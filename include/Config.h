@@ -1,3 +1,8 @@
+/**
+ * @file Config.h
+ * @brief Projenin tüm genel sabitlerini, I2C pin tanımlarını, komut (UDP) setini 
+ *        ve otonomi durum (State Machine) yapılarını barındıran yapılandırma dosyasıdır.
+ */
 #ifndef CONFIG_H
 #define CONFIG_H
 

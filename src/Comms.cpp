@@ -1,3 +1,8 @@
+/**
+ * @file Comms.cpp
+ * @brief UDP üzerinden gelen komutları (Başlatma, Skor vs.) işleyen ve 
+ *        robotun anlık durumunu arayüze (JSON) gönderen haberleşme modülüdür.
+ */
 #include "Comms.h"
 #include <WiFi.h>
 #include <WiFiUdp.h>

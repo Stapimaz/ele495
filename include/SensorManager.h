@@ -1,3 +1,7 @@
+/**
+ * @file SensorManager.h
+ * @brief I2C sensörlerinin (VL53L1X, TCS34725, MPU6050) fonksiyon tanımlamalarını içerir.
+ */
 #ifndef SENSOR_MANAGER_H
 #define SENSOR_MANAGER_H
 

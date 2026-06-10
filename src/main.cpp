@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @brief ESP32 ana giriş dosyası. FreeRTOS task'larını (Core 0: Network, Core 1: Otonomi) 
+ *        başlatır ve pin kurulumlarını çağırarak sistemi ayağa kaldırır.
+ */
 #include <Arduino.h>
 #include "Config.h"
 #include "MotorControl.h"

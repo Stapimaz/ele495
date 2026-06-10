@@ -1,3 +1,8 @@
+/**
+ * @file Shooter.cpp
+ * @brief Mesafe (ToF) değerine göre atış şiddetini (PWM) matematiksel olarak (map ile) hesaplar 
+ *        ve Solenoid donanımını tetikleyerek şut çekme eylemini gerçekleştirir.
+ */
 #include "Shooter.h"
 
 const int solenoidPwmChannel = 2; // Left:0, Right:1, Solenoid:2

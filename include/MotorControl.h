@@ -1,3 +1,7 @@
+/**
+ * @file MotorControl.h
+ * @brief L298N motor sürücü için temel hareket (ileri, geri, dönme) fonksiyonlarını tanımlar.
+ */
 #ifndef MOTOR_CONTROL_H
 #define MOTOR_CONTROL_H
 

@@ -1,3 +1,8 @@
+/**
+ * @file StateMachine.cpp
+ * @brief Projenin ana beynidir. Robotun "Kör ve İnatçı Zamanlayıcı" (Blind Timer Loop) 
+ *        mantığıyla potayı bulmasını, sürmesini ve otonom atış döngüsünü yürütür.
+ */
 #include "StateMachine.h"
 #include "SensorManager.h"
 #include "MotorControl.h"

@@ -1,3 +1,8 @@
+/**
+ * @file SensorManager.cpp
+ * @brief ToF (Mesafe), RGB (Renk) ve MPU6050 (Jiroskop) sensörlerinin başlatılması, 
+ *        I2C çakışmalarının (XSHUT pini ile) giderilmesi ve verilerin okunmasını yönetir.
+ */
 #include "SensorManager.h"
 #include <MPU6050_light.h>
 

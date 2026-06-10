@@ -1,3 +1,8 @@
+/**
+ * @file MotorControl.cpp
+ * @brief Robotun L298N sürücü ve tekerlek motorlarının sürüşünü yönetir. 
+ *        MPU6050 ile açı koruma ve P-Kontrol algoritmalarını barındırır.
+ */
 #include "MotorControl.h"
 
 // ESP32 PWM Ayarları
