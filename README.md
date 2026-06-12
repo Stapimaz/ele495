@@ -60,3 +60,55 @@ ESP32, bağlanan tüm cihazlara (`192.168.4.255` broadcast adresi üzerinden) **
 Kodu ilk kez yükledikten sonra, robotun ortama uyum sağlaması için `include/Config.h` dosyasında şu ayarlamaların yapılması gereklidir:
 1. **Renk Sensörü Eşikleri:** Gerçek piste konulup Turkuaz/Sarı RGB değerleri ölçülmeli ve `StateMachine.cpp` içindeki if-else mantığına girilmelidir.
 2. **ToF Mesafeleri:** Minimum ve maksimum atış mesafesine göre `PWM_MIN_STRENGTH` ve `PWM_MAX_STRENGTH` sınırları deneysel olarak ayarlanmalıdır.
+
+---
+
+## 🔌 Fiziksel Kurulum ve Pin Bağlantıları (Wiring Diagram)
+
+Aşağıdaki bağlantılar, görselini ilettiğiniz 30 Pinli **ESP32-WROOM-32** (NodeMCU-32S) geliştirme kartına tam uyumlu olacak şekilde projenin kodlarındaki (`Config.h`) pin numaralarına göre hazırlanmıştır. Kart üzerindeki `D` harfli pinler direkt numarayı ifade eder (Örn: `D21` = GPIO 21).
+
+### 1. Güç Yönetimi (Çok Önemli!)
+Tüm sistemi tek bir 12V batarya (Örn: 3S Li-Po) ile besleyebilirsiniz. ESP32'yi bataryaya doğrudan **BAĞLAMAYIN**, gücü L298N üzerinden alacağız.
+
+| Batarya / Kaynak | Hedef (L298N Sürücü) | ESP32 | Açıklama |
+| :--- | :--- | :--- | :--- |
+| **12V Batarya (+)** | L298N `12V` (VCC) Pini | - | Motorlara güç verir. |
+| **12V Batarya (-)** | L298N `GND` Pini | ESP32 `GND` | **CRITICAL:** ESP32, L298N ve bataryanın GND pinleri MUTLAKA birleşmelidir (Ortak Toprak). |
+| - | L298N `5V` Pini (Çıkış) | ESP32 `VIN` | L298N içindeki regülatör 12V'u 5V'a düşürüp ESP32'yi besler. |
+
+### 2. I2C Sensör Veriyolu (ToF, Renk, MPU6050)
+Üç sensör (VL53L1X, TCS34725, MPU6050) I2C protokolünü kullandığı için **hepsi paralel (aynı pinlere)** bağlanacaktır. Sensörler 3.3V ile çalışmalıdır.
+
+| ESP32 Pini | Hedef Sensör Pini | Açıklama |
+| :--- | :--- | :--- |
+| `3V3` | Tüm Sensörlerin `VCC` / `VIN` Pini | Sensörlere güç beslemesi. |
+| `GND` | Tüm Sensörlerin `GND` Pini | Ortak toprak. |
+| `D21` | Tüm Sensörlerin `SDA` Pini | I2C Veri hattı. |
+| `D22` | Tüm Sensörlerin `SCL` Pini | I2C Saat hattı. |
+| `D4` | **Sadece VL53L1X** `XSHUT` Pini | Adres çakışmasını çözmek için zorunlu donanımsal reset pini. |
+
+### 3. L298N Motor Sürücü Sinyal Bağlantıları
+Tekerlekleri süren 2 adet DC motor için.
+
+| ESP32 Pini | L298N Pini | Açıklama |
+| :--- | :--- | :--- |
+| `D13` | `ENA` | Sol Motor PWM (Hız kontrolü). Üzerindeki jumper çıkarılmalı. |
+| `D14` | `IN1` | Sol Motor İleri Yön. |
+| `D27` | `IN2` | Sol Motor Geri Yön. |
+| `D25` | `ENB` | Sağ Motor PWM (Hız kontrolü). Üzerindeki jumper çıkarılmalı. |
+| `D26` | `IN3` | Sağ Motor İleri Yön. |
+| `D33` | `IN4` | Sağ Motor Geri Yön. |
+| - | `OUT1` & `OUT2` | Sol DC Motor kutuplarına gider. |
+| - | `OUT3` & `OUT4` | Sağ DC Motor kutuplarına gider. |
+
+### 4. Solenoid Atış Mekanizması Sürücü Devresi
+**UYARI:** Solenoid, ESP32'den veya L298N sinyalinden direkt beslenemez! Arada Solenoid'i sürecek bir MOSFET Modülü (Örn: IRF520 veya Logic-Level IRLZ44N) kullanılmalıdır. Atış şiddeti PWM ile ayarlandığı için Röle KULLANILAMAZ.
+
+| ESP32 Pini | MOSFET Modülü | Solenoid / Güç |
+| :--- | :--- | :--- |
+| `D32` | MOSFET `SIG` / `Gate` | Atış şiddetini belirleyen PWM sinyali. |
+| `GND` | MOSFET `GND` / `Source` | Ortak toprak bağlantısı. |
+| - | MOSFET `V+` veya Vin | 12V Batarya (+)'sına gider. |
+| - | MOSFET `V-` veya Drain | Solenoidin (-) ucuna gider. Solenoidin (+) ucu direkt 12V'a bağlanır. |
+
+*(Önemli: Eğer çıplak MOSFET kullanıyorsanız, Solenoid uçlarına ters paralel bir "Flyback Diyot - Örn: 1N4007" bağlamanız devreyi yanmaktan korur. Hazır MOSFET modüllerinin çoğunda bu koruma vardır.)*
